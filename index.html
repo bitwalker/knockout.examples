@@ -1,0 +1,85 @@
+<!DOCTYPE HTML!>
+<head>
+  <link rel="stylesheet" href="./css/normalize.css"></link>
+  <link rel="stylesheet" href="./css/bootstrap.css"></link>
+  <link rel="stylesheet" href="./css/style.css"></link>
+  <script type="text/javascript" src="./js/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript" src="./js/underscore-min.js"></script>
+  <script type="text/javascript" src="./js/knockout-2.2.1.js"></script>
+  <script type="text/javascript" src="./js/knockout.mapping-latest.js"></script>
+</head>
+<body>
+  <div class="tabbable"> <!-- Only required for left/right tabs -->
+    <ul class="nav nav-tabs">
+      <!-- ko foreach:views -->
+      <!-- ko if:$root.selectedView() == $data -->
+      <li class="active"><a href="#" data-bind="text: title, click: $root.selectedView"></a></li>
+      <!-- /ko -->
+      <!-- ko ifnot:$root.selectedView() == $data -->
+      <li><a href="#" data-bind="text: title, click: $root.selectedView"></a></li>
+      <!-- /ko -->
+      <!-- /ko -->
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" data-bind="with: selectedView">
+          <div class="input-prepend">
+              <span class="add-on"><i class="icon-search"></i></span>
+              <input class="span2" id="prependedInput" type="text" data-bind="value: options.query, valueUpdate: 'keyup'">
+              <span class="badge badge-inverse" data-bind="text: dataLength"></span>
+          </div>
+          <div data-bind="template: { name: template, data: searched() }"></div>
+          <div class="pagination pull-left" data-bind="template:{ name: 'template-pagination', data: $data }"></div>
+      </div>
+    </div>
+  </div>
+
+  <script id="listTmpl" type="text/html">
+      <table class="table">
+          <thead>
+               <tr>
+                   <th>Id</th>
+                   <th>Value</th>
+                   <th>Status</th>
+               </tr>
+           </thead>
+           <tbody data-bind="foreach: items">
+               <tr>
+                   <td data-bind="text: id"></td>
+                   <td data-bind="text: name"></td>
+                   <td data-bind="text: active"></td>
+               </tr>
+           </tbody>
+       </table>
+  </script>
+
+  <script type="text/html" id="template-pagination">
+      <ul>
+          <!-- ko if:hasPrevPage -->
+          <li><a href="#" data-bind="click: function(){ currentPage(currentPage() - 1); }">&laquo;</a></li>
+          <!-- /ko -->
+          <!-- ko ifnot:hasPrevPage -->
+          <li class="disabled"><a href="#" class="disabledPage">&laquo;</a></li>
+          <!-- /ko -->
+          <!-- ko foreach:pageNumbers -->
+          <!-- ko if:$data === $parent.currentPage() -->
+          <li class="active">
+              <span class="currentPage" data-bind="text: $data"></span>
+          </li>
+          <!-- /ko -->
+          <!-- ko if:$data !== $parent.currentPage() -->
+          <li>
+              <a href="#" data-bind="text: $data, click: function(){ $parent.currentPage($data); }"></a>
+          </li>
+          <!-- /ko -->
+          <!-- /ko -->
+          <!-- ko if:hasNextPage -->
+          <li><a href="#" data-bind="click: function(){ currentPage(currentPage() + 1); }">&raquo;</a></li>
+          <!-- /ko -->
+          <!-- ko ifnot:hasNextPage -->
+          <li class="disabled"><a href="#" class="disabledPage">&raquo;</a></li>
+          <!-- /ko -->
+      </ul>
+  </script>
+  <script type="text/javascript" src="./js/main.js"></script>
+</body>
+</html>
